@@ -57,11 +57,11 @@ public class Arbol {
 	}
 	public Estado estadoRepetido(Estado nuevo){ //Regresa un estado; el mísmo si es un estado nuevo y el estado original si no es nuevo.
 		Stack<Estado> stack=new Stack<Estado>();
-		
 		stack.add(raiz);
 		while(!stack.isEmpty()){
 			Estado estado=stack.pop();
 			if(estado==nuevo){
+				estado.setVisited();
 				return estado;
 			}
 			HashMap<Operadores, Estado> connections=estado.getConnections();
@@ -99,7 +99,28 @@ public class Arbol {
 		System.out.println("no se encontro el cero!!! U.U");
 		return -1;
 	}
-	public void add(Estado estado){
+	public void add(Estado estado,Estado nuevo,Operadores camino){
+		estado.setConnections(camino, nuevo);
+	}
+	public Estado llenarArbol(Estado padre,Operadores operador){
+		Estado hijo=generarEstado(operador,padre);
+		hijo=estadoRepetido(hijo);
+		padre.setConnections(operador, hijo);
+		//izquierda,abajo,arriba,derecha
+		if(hijo.getVisited()){
+			return hijo;
 		}
+		switch(operador){
+		case IZQUIERDA:
+			llenarArbol(hijo,Operadores.IZQUIERDA);
+		case ABAJO:
+			llenarArbol(hijo,Operadores.ABAJO);
+		case ARRIBA:
+			llenarArbol(hijo,Operadores.ARRIBA);
+		case DERECHA:
+			llenarArbol(hijo,Operadores.DERECHA);
+		}
+		return null;
+	}
 
 }

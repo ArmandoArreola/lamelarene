@@ -18,7 +18,9 @@ public class Estado {
 		visited=true;
 	}
 	public int[][] getInformation(){
-		return this.information;
+		int[][] info=new int[3][3];
+				info=this.information;
+		return info;
 	}
 	public HashMap<Operadores, Estado> getConnections(){
 		return this.connections;

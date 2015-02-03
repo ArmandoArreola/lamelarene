@@ -20,9 +20,7 @@ public class main {
 		estado.printInformation();
 		estado=arbol.estadoRepetido(estado);
 		
-		boolean flag=true;
-		while(flag){
-			flag=false;
-		}
+		arbol.llenarArbol(arbol.getRaiz(), Operadores.IZQUIERDA);
+		
 	}
 }
