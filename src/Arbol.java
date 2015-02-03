@@ -92,7 +92,7 @@ public class Arbol {
 			}
 			
 		}
-		System.out.println("no se encontro el cero!! U.U");
+		System.out.println("no se encontro el cero!!! U.U");
 		return -1;
 	}
 
