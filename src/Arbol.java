@@ -64,7 +64,7 @@ public class Arbol {
 			HashMap<Operadores, Estado> connections=estado.getConnections();
 			Collection<Estado> valores=connections.values();
 			for(int i=0;i<valores.size();i++){
-				//lamelarene
+				//stack.push(valores.);
 			}
 		}
 		/*HashMap<Operadores, Estado> raices=raiz.getConnections();
