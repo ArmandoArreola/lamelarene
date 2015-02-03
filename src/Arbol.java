@@ -55,32 +55,23 @@ public class Arbol {
 	public boolean estadoValido(Estado estado){ //Regresa verdadero o falso si el estado es valido o inválido
 		return false;
 	}
-	public Estado estadoRepetido(Estado estado){ //Regresa un estado; el mísmo si es un estado nuevo y el estado original si no es nuevo.
+	public Estado estadoRepetido(Estado nuevo){ //Regresa un estado; el mísmo si es un estado nuevo y el estado original si no es nuevo.
 		Stack<Estado> stack=new Stack<Estado>();
 		
 		stack.add(raiz);
 		while(!stack.isEmpty()){
-			estado=stack.pop();
+			Estado estado=stack.pop();
+			if(estado==nuevo){
+				return estado;
+			}
 			HashMap<Operadores, Estado> connections=estado.getConnections();
 			Collection<Estado> valores=connections.values();
+			Object[] valoresArray=valores.toArray();
 			for(int i=0;i<valores.size();i++){
-				//stack.push(valores.);
+				stack.push((Estado) valoresArray[i]);
 			}
 		}
-		/*HashMap<Operadores, Estado> raices=raiz.getConnections();
-		boolean bandera=true;
-		while(bandera){
-			if(!raices.isEmpty()){
-				if(raices.containsValue(estado)){
-					return raiz;
-				}
-				
-			}else{
-				bandera=false;
-			}
-		}*/
-		
-		return estado;
+		return nuevo;
 	}
 	public void imprimir(Estado raiz) { // Metodo para imprimir todo
 		if (raiz != null) {
@@ -108,5 +99,7 @@ public class Arbol {
 		System.out.println("no se encontro el cero!!! U.U");
 		return -1;
 	}
+	public void add(Estado estado){
+		}
 
 }
