@@ -1,4 +1,6 @@
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Stack;
 
 
 public class Arbol {
@@ -54,6 +56,17 @@ public class Arbol {
 		return false;
 	}
 	public Estado estadoRepetido(Estado estado){ //Regresa un estado; el mísmo si es un estado nuevo y el estado original si no es nuevo.
+		Stack<Estado> stack=new Stack<Estado>();
+		
+		stack.add(raiz);
+		while(!stack.isEmpty()){
+			estado=stack.pop();
+			HashMap<Operadores, Estado> connections=estado.getConnections();
+			Collection<Estado> valores=connections.values();
+			for(int i=0;i<valores.size();i++){
+				//lamelarene
+			}
+		}
 		/*HashMap<Operadores, Estado> raices=raiz.getConnections();
 		boolean bandera=true;
 		while(bandera){
