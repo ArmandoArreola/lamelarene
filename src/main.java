@@ -21,6 +21,6 @@ public class main {
 		estado=arbol.estadoRepetido(estado);
 		
 		arbol.llenarArbol(arbol.getRaiz(), Operadores.IZQUIERDA);
-		
+		System.out.println("Congrats!!");
 	}
 }

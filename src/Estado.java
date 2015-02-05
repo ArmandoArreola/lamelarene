@@ -8,18 +8,22 @@ public class Estado {
 		this.information=information;
 	}
 	public void setConnections(Operadores operador, Estado estado){
-		if(!this.connections.containsValue(estado)){
+		//if(!this.connections.containsValue(estado)){
 			this.connections.put(operador, estado);
-		}else{
+/*		}else{
 			System.out.println("Estado: "+estado.information.toString()+" ya existe.");
-		}
+		}*/
 	}
-	public void setVisited(){//visited
-		visited=true;
+	public void setVisited(boolean visited){//visited
+		this.visited=visited;
 	}
 	public int[][] getInformation(){
 		int[][] info=new int[3][3];
-				info=this.information;
+		for (int i=0;i<this.information.length;i++) {
+			for(int j=0;j<this.information[i].length;j++){
+				info[i][j]=this.information[i][j];
+			}
+		}
 		return info;
 	}
 	public HashMap<Operadores, Estado> getConnections(){

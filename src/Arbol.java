@@ -22,53 +22,82 @@ public class Arbol {
 		switch(operador){
 			case ARRIBA:
 				if(position<(info.length*info.length)-info.length){// para que un numero pueda bajar tiene que ser su posicion menor que 6
-					int numMovido=info[row+1][grid];
-					info[row+1][grid]=0;
-					info[row][grid]=numMovido;
+					try{
+						int numMovido=info[row+1][grid];
+						info[row+1][grid]=0;
+						info[row][grid]=numMovido;
+					}catch(Exception noSePuedeMover){
+						return null;
+					}
 				}
 				break;
 			case ABAJO:
 				if(position>=info.length){
-					int numMovido=info[row-1][grid];
-					info[row-1][grid]=0;
-					info[row][grid]=numMovido;
+					try{
+						int numMovido=info[row-1][grid];
+						info[row-1][grid]=0;
+						info[row][grid]=numMovido;
+					}catch(Exception noSePuedeMover){
+						return null;
+					}
 				}
 				break;
 			case IZQUIERDA:
 				if(position%info.length!=0){
-					int numMovido=info[row][grid+1];
-					info[row][grid+1]=0;
-					info[row][grid]=numMovido;
+					try{
+						int numMovido=info[row][grid+1];
+						info[row][grid+1]=0;
+						info[row][grid]=numMovido;
+					}catch(Exception noSePuedeMover){
+						return null;
+					}
 				}
 				break;
 			case DERECHA:
 				if(position+1%info.length!=0){
-					int numMovido=info[row][grid-1];
-					info[row][grid-1]=0;
-					info[row][grid]=numMovido;
+					try{
+						int numMovido=info[row][grid-1];
+						info[row][grid-1]=0;
+						info[row][grid]=numMovido;
+					}catch(Exception noSePuedeMover){
+						return null;
+					}
 				}
 				break;
 		}
 		Estado estadoResultado=new Estado(info);
 		return estadoResultado;
 	}
-	public boolean estadoValido(Estado estado){ //Regresa verdadero o falso si el estado es valido o inválido
-		return false;
+	public boolean compare(int[][] estado1,int[][] estado2){ //Regresa verdadero o falso si el estado es valido o inválido
+		for(int i=0;i<estado1.length;i++){
+			for(int j=0;j<estado1[i].length;j++){
+				if(estado1[i][j]!=estado2[i][j]){
+					return false;
+				}
+			}
+		}
+		return true;
 	}
 	public Estado estadoRepetido(Estado nuevo){ //Regresa un estado; el mísmo si es un estado nuevo y el estado original si no es nuevo.
 		Stack<Estado> stack=new Stack<Estado>();
 		stack.add(raiz);
+		if(nuevo==null)
+		{
+			return null;
+		}
 		while(!stack.isEmpty()){
 			Estado estado=stack.pop();
-			if(estado==nuevo){
-				estado.setVisited();
-				return estado;
+			if(compare(estado.getInformation(),nuevo.getInformation())){
+				estado.setVisited(true);
+				return null;
 			}
 			HashMap<Operadores, Estado> connections=estado.getConnections();
 			Collection<Estado> valores=connections.values();
 			Object[] valoresArray=valores.toArray();
 			for(int i=0;i<valores.size();i++){
-				stack.push((Estado) valoresArray[i]);
+				if(valoresArray[i]!=null){
+					stack.push((Estado) valoresArray[i]);
+				}
 			}
 		}
 		return nuevo;
@@ -104,21 +133,25 @@ public class Arbol {
 	}
 	public Estado llenarArbol(Estado padre,Operadores operador){
 		Estado hijo=generarEstado(operador,padre);
+		Estado raiz2=getRaiz();
 		hijo=estadoRepetido(hijo);
 		padre.setConnections(operador, hijo);
 		//izquierda,abajo,arriba,derecha
-		if(hijo.getVisited()){
-			return hijo;
+		if(hijo==null||hijo.getVisited()){
+			try{
+				hijo.setVisited(false);
+			}catch(Exception nul){}
+			return null;
 		}
 		switch(operador){
 		case IZQUIERDA:
 			llenarArbol(hijo,Operadores.IZQUIERDA);
 		case ABAJO:
 			llenarArbol(hijo,Operadores.ABAJO);
-		case ARRIBA:
-			llenarArbol(hijo,Operadores.ARRIBA);
 		case DERECHA:
 			llenarArbol(hijo,Operadores.DERECHA);
+		case ARRIBA:
+			llenarArbol(hijo,Operadores.ARRIBA);
 		}
 		return null;
 	}
