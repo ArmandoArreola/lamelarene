@@ -133,7 +133,7 @@ public class Arbol {
 	}
 	public Estado llenarArbol(Estado padre,Operadores operador){
 		Estado hijo=generarEstado(operador,padre);
-		Estado raiz2=getRaiz();
+		//Estado raiz2=getRaiz();
 		hijo=estadoRepetido(hijo);
 		padre.setConnections(operador, hijo);
 		//izquierda,abajo,arriba,derecha
