@@ -1,10 +1,12 @@
 
 public class main {
 	public static void main(String[] args) {
-		int[][] juego= {{4,1,5},{6,0,3},{2,7,8}};
-		Estado estado=new Estado(juego);
+		int[][] estadoInicial= {{4,1,5},{6,0,3},{2,7,8}};
+		int[][] estadoFinal= {{1,2,3},{4,5,6},{7,8,0}};
+		Estado estado=new Estado(estadoInicial);
+		estado.setVisited(true);
 		Arbol arbol = new Arbol(estado);
-		System.out.println("INICIO");
+		/*System.out.println("INICIO");
 		estado.printInformation();
 		estado=arbol.generarEstado(Operadores.ARRIBA, estado);
 		System.out.println("ARRIBA");
@@ -17,8 +19,8 @@ public class main {
 		estado.printInformation();
 		estado=arbol.generarEstado(Operadores.DERECHA, estado);
 		System.out.println("DERECHA");
-		estado.printInformation();
-		estado=arbol.estadoRepetido(estado);
+		estado.printInformation();*/
+		//estado=arbol.estadoRepetido(estado);
 		
 		arbol.llenarArbol(arbol.getRaiz(), Operadores.IZQUIERDA);
 		System.out.println("Congrats!!");
