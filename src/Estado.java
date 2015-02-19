@@ -40,4 +40,18 @@ public class Estado {
 			System.out.println();
 		}
 	}
+	public String toCadena(){
+		if(information==null){
+			return "";
+		}
+		String resultado="";
+		double resultadoDouble;
+		for (int[] info : information) {
+			for (int i : info) {
+				resultado=resultado+String.valueOf(i);
+			}
+		}
+
+		return resultado;
+	}
 }

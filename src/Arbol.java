@@ -1,13 +1,18 @@
+import java.io.PrintWriter;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Stack;
 
 
 public class Arbol {
 	private Estado raiz;
 	int[][] prueba={{4,1,5},{2,6,3},{0,7,8}};
-	public Arbol(Estado raiz){
+	Map<String,Estado> estados= new HashMap();
+	private PrintWriter pw;
+	public Arbol(Estado raiz, PrintWriter pw){
 		this.raiz=raiz;
+		this.pw=pw;
 	}
 	
 	public Estado getRaiz(){
@@ -90,6 +95,24 @@ public class Arbol {
 		}
 		return true;
 	}
+	public Estado estadoRepetidoStack(Estado nuevo, PrintWriter writer){// hace stack overflow NO UTILIZAR
+		if (nuevo==null){
+			return null;
+		}
+		String num=nuevo.toCadena();
+		if(num.equalsIgnoreCase("")){
+			return null;
+		}
+		if(!this.estados.containsKey(num)){
+			estados.put(num, nuevo);
+			pw.println(num);
+			return nuevo;
+		}else{
+			Estado viejo=this.estados.get(num);
+			viejo.setVisited(true);
+			return viejo;
+		}
+	}
 	public Estado estadoRepetido(Estado nuevo){ //Regresa un estado; el mísmo si es un estado nuevo y el estado original si no es nuevo.
 		Stack<Estado> stack=new Stack<Estado>();
 		stack.add(raiz);
@@ -163,8 +186,9 @@ public class Arbol {
 				System.out.println("Valio verga");
 			}
 		}
-		hijo=estadoRepetido(hijo);
+		hijo=estadoRepetidoStack(hijo, this.pw);
 		if(hijo!=null){
+			System.out.println("PADRE");
 			padre.printInformation();
 			System.out.println(operador);
 			hijo.printInformation();
