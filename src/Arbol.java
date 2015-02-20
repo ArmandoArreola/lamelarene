@@ -9,7 +9,7 @@ public class Arbol {
 	private Estado raiz;
 	int[][] prueba={{4,1,5},{2,6,3},{0,7,8}};
 	Map<String,Estado> estados= new HashMap();
-	private PrintWriter pw;
+	private PrintWriter pw;// es el escritor de archivos
 	public Arbol(Estado raiz, PrintWriter pw){
 		this.raiz=raiz;
 		this.pw=pw;
@@ -105,7 +105,7 @@ public class Arbol {
 		}
 		if(!this.estados.containsKey(num)){
 			estados.put(num, nuevo);
-			pw.println(num);
+			pw.println(num);// escribe en el archivo el nuevo estado
 			return nuevo;
 		}else{
 			Estado viejo=this.estados.get(num);
