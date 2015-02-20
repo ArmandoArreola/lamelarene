@@ -8,7 +8,7 @@ import java.util.Stack;
 public class Arbol {
 	private Estado raiz;
 	int[][] prueba={{4,1,5},{2,6,3},{0,7,8}};
-	Map<String,Estado> estados= new HashMap();
+	Stack<int[][]> estados=new Stack<int[][]>();
 	private PrintWriter pw;// es el escritor de archivos
 	public Arbol(Estado raiz, PrintWriter pw){
 		this.raiz=raiz;
@@ -99,16 +99,15 @@ public class Arbol {
 		if (nuevo==null){
 			return null;
 		}
-		String num=nuevo.toCadena();
-		if(num.equalsIgnoreCase("")){
-			return null;
-		}
-		if(!this.estados.containsKey(num)){
-			estados.put(num, nuevo);
-			pw.println(num);// escribe en el archivo el nuevo estado
+		int[][] num=nuevo.getInformation();
+		if(!this.estados.contains(num)){
+			estados.add(num);
+			pw.println(nuevo.toCadena());// escribe en el archivo el nuevo estado
 			return nuevo;
 		}else{
-			Estado viejo=this.estados.get(num);
+			int index=this.estados.indexOf(num);
+			int[][] infoVieja=this.estados.get(index);
+			Estado viejo=findEstado(infoVieja);
 			viejo.setVisited(true);
 			return viejo;
 		}
@@ -147,6 +146,27 @@ public class Arbol {
 			
 		}
 		return nuevo;
+	}
+	public Estado findEstado(int[][] information){
+		Stack<Estado> stack=new Stack<Estado>();
+		stack.add(raiz);
+
+		Estado upadre = null;
+		while(!stack.isEmpty()){
+			Estado estado=stack.pop();
+			if(compare(estado.getInformation(),information)){
+				estado.setVisited(true);
+				return estado;//aqui es el pobrema
+			}else{
+				HashMap<Operadores, Estado> connections=estado.getConnections();
+				Collection<Estado> valores=connections.values();
+				Object[] valoresArray=valores.toArray();
+				for(int i=0;i<valores.size();i++){
+					stack.push((Estado) valoresArray[i]);
+				}
+			}
+		}
+		return null;
 	}
 	public void imprimir(Estado raiz) { // Metodo para imprimir todo
 		if (raiz != null) {
