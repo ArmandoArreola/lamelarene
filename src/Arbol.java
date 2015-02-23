@@ -226,32 +226,173 @@ public class Arbol {
 			llenarArbol(hijo,Operadores.ARRIBA);
 			return null;
 	}
-	public void resolver(int num,Estado estado){
-		int cuadranteZero=0;
-		int cuadrante=0;
-		int[][] info=estado.getInformation();
-		int currentPosition=findNum(info,num);
-		if(currentPosition!=num){
-			int positionZero=findNum(info,0);
-			if(positionZero==1||positionZero==2||positionZero==4||positionZero==5){
-				cuadranteZero=1;
-			}else if(positionZero==2||positionZero==3||positionZero==6||positionZero==5){
-				cuadranteZero=2;
-			}else if(positionZero==4||positionZero==5||positionZero==7||positionZero==8){
-				cuadranteZero=3;
-			}else if(positionZero==5||positionZero==6||positionZero==8||positionZero==9){
-				cuadranteZero=4;
+	
+	public void heuristica(Estado estadoFinal){
+		//resuelve al estado final deseado
+			int[][] infoFinal=estadoFinal.getInformation();
+			Estado estadoActual=new Estado(raiz.getInformation());
+			int numero;
+			int x=0;
+			while(!compare(estadoActual.getInformation(),infoFinal)){
+				for(numero=1;numero<9;numero++){//que numero empezaras a mover, si ya esta en su lugar no se tiene que mover
+					int j=findNum(estadoActual.getInformation(),numero);
+					if(numero!=j){
+						break;
+					}
+					numero++;
+				}
+				if(ceroSercaDeNumero(estadoActual,numero)){//estoy serca del numero?
+						if(posicionNumeroMayorACero(estadoActual,numero)){//numero es mayor que cero
+							//true
+							estadoActual=hacerEspacio(estadoActual,numero);//hacer espacio
+							//posicionarCeroEnPosicionMenorQueNumero(estadoActual,numero);//posicionarte menor que numero
+							estadoActual=moverAposicionDeCero(estadoActual,numero);//movernumero a posicion de cero
+						}else{//false
+							estadoActual=moverAposicionDeCero(estadoActual,numero);//movernumero a posicion de cero
+						}
+				}else{//false
+						estadoActual=acercarseANumero(estadoActual,numero);//acercarseNumero
+				}
+				x++;
 			}
-			if(currentPosition==1||currentPosition==2||currentPosition==4||currentPosition==5){
-				cuadrante=1;
-			}else if(currentPosition==2||currentPosition==3||currentPosition==6||currentPosition==5){
-				cuadrante=2;
-			}else if(currentPosition==4||currentPosition==5||currentPosition==7||currentPosition==8){
-				cuadrante=3;
-			}else if(currentPosition==5||currentPosition==6||currentPosition==8||currentPosition==9){
-				cuadrante=4;
-			}
-			
+			System.out.println("fueron"+x+"pasos para llegar al objetivo");
 		}
-	}
+
+		private Estado acercarseANumero(Estado estadoActual, int numero) {
+			int posCero;
+			int posNum;
+			posNum=findNum(estadoActual.getInformation(),numero);//3
+			posCero=findNum(estadoActual.getInformation(),0);//4
+			HashMap<Operadores, Estado> conections=estadoActual.getConnections();
+			if(posNum<posCero){
+				if(conections.get(Operadores.DERECHA)!=null||!conections.get(Operadores.DERECHA).getVisited()){
+					return conections.get(Operadores.DERECHA);
+				}else if(conections.get(Operadores.IZQUIERDA)!=null||!conections.get(Operadores.IZQUIERDA).getVisited()){
+					estadoActual.setVisited(true);
+					return conections.get(Operadores.IZQUIERDA);
+				}else if(conections.get(Operadores.ARRIBA)!=null||!conections.get(Operadores.ARRIBA).getVisited()){
+					estadoActual.setVisited(true);
+					return conections.get(Operadores.ARRIBA);
+				}
+			}else{
+				if(conections.get(Operadores.IZQUIERDA)!=null||!conections.get(Operadores.IZQUIERDA).getVisited()){
+					return conections.get(Operadores.IZQUIERDA);
+				}else if(conections.get(Operadores.DERECHA)!=null||!conections.get(Operadores.DERECHA).getVisited()){
+					estadoActual.setVisited(true);
+					return conections.get(Operadores.DERECHA);
+				}else if(conections.get(Operadores.ABAJO)!=null||!conections.get(Operadores.ABAJO).getVisited()){
+					estadoActual.setVisited(true);
+					return conections.get(Operadores.ABAJO);
+				}
+			}
+			System.out.println("ERROR EN ACERCARSE A NUMERO");
+			return null;
+		}
+
+		private boolean posicionNumeroMayorACero(Estado estadoActual, int numero) {
+			int posNum=findNum(estadoActual.getInformation(),numero);
+			int posCero=findNum(estadoActual.getInformation(),0);
+			if (posNum>posCero){
+				return true;
+			}else{
+			return false;
+			}
+		}
+
+		private boolean ceroSercaDeNumero(Estado estadoActual, int numero) {
+			int posNum=findNum(estadoActual.getInformation(),numero);
+			int posCero=findNum(estadoActual.getInformation(),0);
+			switch(posNum){
+				case 1:
+					if(posCero==2||posCero==4){
+						return true;
+					}
+					break;
+				case 3:
+					if(posCero==2||posCero==6){
+						return true;
+					}
+					break;
+				case 4:
+					if(posCero==1||posCero==5||posCero==7){
+						return true;
+					}
+					break;
+				case 6:
+					if(posCero==3||posCero==5||posCero==9){
+						return true;
+					}
+					break;
+				case 7:
+					if(posCero==4||posCero==8){
+						return true;
+					}
+					break;
+				case 9:
+					if(posCero==6||posCero==8){
+						return true;
+					}
+					break;
+				default://los del centro
+					if(posNum==posCero+1||posNum==posCero-1||posNum==posCero+3||posNum==posCero-3){
+						return true;
+					}
+			}
+			return false;
+		}
+		
+		private Estado hacerEspacio(Estado estadoActual,int numero) {
+			int posNum=findNum(estadoActual.getInformation(),numero);
+			int posCero=findNum(estadoActual.getInformation(),0);
+			HashMap<Operadores, Estado> estados=estadoActual.getConnections();
+			Estado nuevo;
+			if(posNum==posCero-1){
+				 nuevo=estados.get(Operadores.ABAJO);
+				 estados=nuevo.getConnections();
+				 return estados.get(Operadores.DERECHA);
+			}
+			if(posNum==posCero+1){
+				 nuevo=estados.get(Operadores.ABAJO);
+				 estados=nuevo.getConnections();
+				 return estados.get(Operadores.IZQUIERDA);
+			}
+			if(posNum==posCero-3){
+				 nuevo=estados.get(Operadores.IZQUIERDA);
+				 estados=nuevo.getConnections();
+				 return estados.get(Operadores.ABAJO);
+			}
+			return null;
+		}
+
+		private Estado posicionarCeroEnPosicionMenorQueNumero(Estado estadoActual,int numero) {
+			int posNum=findNum(estadoActual.getInformation(),numero);
+			int posCero=findNum(estadoActual.getInformation(),0);
+			if(posNum==posCero-1){//mover izquierda
+				return generarEstado(Operadores.IZQUIERDA, estadoActual);
+			}else if(posNum==posCero-3){
+				return generarEstado(Operadores.ARRIBA, estadoActual);//mover arriba
+			}else{
+				return null;//error
+			}
+		}
+
+		private Estado moverAposicionDeCero(Estado estadoActual,int numero) {
+			int posNum=findNum(estadoActual.getInformation(),numero);
+			int posCero=findNum(estadoActual.getInformation(),0);
+			HashMap<Operadores, Estado> estados=estadoActual.getConnections();
+			if(posNum==posCero+1){
+				return estados.get(Operadores.DERECHA);
+			}
+			if(posNum==posCero-1){
+				return estados.get(Operadores.IZQUIERDA);
+			}
+			if(posNum==posCero+3){
+				return estados.get(Operadores.ABAJO);
+			}
+			if(posNum==posCero-3){
+				return estados.get(Operadores.ARRIBA);
+			}
+			return null;
+		}
+
 }

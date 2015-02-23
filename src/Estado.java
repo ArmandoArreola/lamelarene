@@ -4,6 +4,7 @@ public class Estado {
 	private int information[][]=new	 int[3][3];
 	private HashMap<Operadores, Estado> connections = new HashMap<Operadores, Estado>();
 	private boolean visited=false;
+	private boolean visitedShortestPath=false;
 	public Estado(int information[][]){
 		this.information=information;
 	}
@@ -16,6 +17,12 @@ public class Estado {
 	}
 	public void setVisited(boolean visited){//visited
 		this.visited=visited;
+	}
+	public void setVisitedShortestPath(boolean visited){
+		this.visitedShortestPath=visited;
+	}
+	public boolean getVisitedShortestPath(){
+		return this.visitedShortestPath;
 	}
 	public int[][] getInformation(){
 		int[][] info=new int[3][3];
@@ -45,7 +52,6 @@ public class Estado {
 			return "";
 		}
 		String resultado="";
-		double resultadoDouble;
 		for (int[] info : information) {
 			for (int i : info) {
 				resultado=resultado+String.valueOf(i);
