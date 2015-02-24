@@ -10,6 +10,7 @@ public class Arbol {
 	int[][] prueba={{4,1,5},{2,6,3},{0,7,8}};
 	Stack<int[][]> estados=new Stack<int[][]>();
 	private PrintWriter pw;// es el escritor de archivos
+	private double estadosGenerados;
 	public Arbol(Estado raiz, PrintWriter pw){
 		this.raiz=raiz;
 		this.pw=pw;
@@ -145,6 +146,8 @@ public class Arbol {
 			}
 			
 		}
+		estadosGenerados++;
+		pw.println(estadosGenerados+nuevo.toCadena());
 		return nuevo;
 	}
 	public Estado findEstado(int[][] information){
@@ -203,10 +206,10 @@ public class Arbol {
 		if(hijo!=null){
 			if(compare(hijo.getInformation(),prueba))
 			{
-				System.out.println("Valio verga");
+				System.out.println("Valio");
 			}
 		}
-		hijo=estadoRepetidoStack(hijo, this.pw);
+		hijo=estadoRepetido(hijo);
 		if(hijo!=null){
 			System.out.println("PADRE");
 			padre.printInformation();

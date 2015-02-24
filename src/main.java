@@ -12,7 +12,7 @@ public class main {
 		PrintWriter pw = null;
 		try {
 			fichero = new FileWriter(
-					"C:/Users/carlosarmando/Desktop/prueba.txt");
+					"/prueba.txt");
 			pw = new PrintWriter(fichero);
 			Arbol arbol = new Arbol(estado, pw);
 			arbol.llenarArbol(arbol.getRaiz(), Operadores.IZQUIERDA);
